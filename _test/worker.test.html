@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset=utf-8>
+<title>Worker</title>
+</head>
+<body>
+<section id="wrapper">
+    <header>
+      <h1>Worker</h1>
+    </header>
+
+    <article>
+      <canvas id="canvas" width="600" height="400"></canvas>
+      <div><input type="button" value="start worker" id="toggleWorker" /></div>
+      <img id="particle" style="display:none" src="bouton_green.png" />
+    </article>
+    
+<script>
+var cvs = document.getElementById('canvas'),
+    ctx = cvs.getContext('2d'),
+    img = document.getElementById('particle');
+
+var w = new Worker('cruncher.js');
+w.onmessage = function (event) {
+    draw(event.data);
+}
+function draw (data) {
+    data = JSON.parse(data);
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    for (var i = 0; i < data.length; i ++) {
+        ctx.drawImage(img, data[i].x, data[i].y);
+    }
+    
+}
+onload = function () {
+    document.getElementById('toggleWorker').addEventListener('click', function (e) {
+        w.postMessage('');
+    }, false);
+}
+
+</script>
+
+</body>
+</html>
